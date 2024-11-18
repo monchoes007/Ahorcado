@@ -15,15 +15,38 @@ public class Ahorcado {
     private String[] palabras=new String[]{"nariz","casa","bicicleta","naranaja"};
     private String palabraSecreta;
     private String palabraPublica="";
+    private int numMaximoFallos=5; 
     
     public Ahorcado() {
         escogePalabra();
         imprimePalabra();
-        comprobarLetra(pedirLetra());
-        System.out.println(palabraSecreta);
-        System.out.println(palabraPublica);
     }
 
+    /**
+     * Método que va a jugar al ahorcado
+     */
+    public void jugar(){
+        do{
+            if(!comprobarLetra(pedirLetra())){
+                numMaximoFallos--;
+            }
+            System.out.println(palabraPublica);
+            intentosRestantes();
+            // Compruebo que he acertado la palabra
+            if(palabraPublica.equals(palabraSecreta)){
+                break;
+            }
+        }while(numMaximoFallos>0);
+        finalJuego();
+    }
+    
+    /**
+     * Muestra los intentos que quedan
+     */
+    public void intentosRestantes(){
+        System.out.println("Te quedan "+numMaximoFallos+" intentos");
+    }
+    
     /**
      * Selecciona una palabra de las que tenemos en nuestro diccionario
      */
@@ -54,17 +77,30 @@ public class Ahorcado {
     /**
      * Metódo para comprobar si la letra elegida está en la palabra
      * @param letra char con la letra elegida
+     * @return Devuelvo cierto si la letra está en la palbra y sino falso
      */
-    public void comprobarLetra(char letra){
-       
+    public boolean comprobarLetra(char letra){
+        boolean aciertoLetra=false;
         for (int i = 0; i < palabraSecreta.length(); i++) {
+            // Miro si la letra correstponde
             if(palabraSecreta.charAt(i)==letra){
                StringBuilder palabraBuilder=new StringBuilder(palabraPublica);
                palabraBuilder.setCharAt(i, letra);
                palabraPublica=palabraBuilder.toString();
-              
+               aciertoLetra=true; 
             }
         }
+        return aciertoLetra;
     }
-    
+
+    /**
+     * Pone el mensaje de finalización del juego
+     */
+    private void finalJuego() {
+        if(numMaximoFallos>0){
+            System.out.println("Enhorabuena, has ganado");
+        }else{
+            System.out.println("Sin comentarios");
+        }
+    }  
 }
